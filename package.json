@@ -1,0 +1,14 @@
+{
+  "name": "adminpro-backend",
+  "version": "1.0.0",
+  "description": "A backend server for adminpro ui",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ergito Vilanculos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
