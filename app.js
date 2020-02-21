@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 // initializations
 const app = express();
 
+// importing routes
+const appRoutes = require('./routes/app');
+const userRoutes = require('./routes/user');
+
 // database connection
 const uri = "mongodb://localhost:27017/hospitalDB";
 mongoose.connection.openUri(
@@ -17,12 +21,8 @@ mongoose.connection.openUri(
 );
 
 // routes
-app.get("/", (req, res, next) => {
-  res.status(200).json({
-    ok: true,
-    message: "Request executed successfully"
-  });
-});
+app.use("/users", userRoutes);
+app.use("/", appRoutes);
 
 // executes queries
 app.listen(3000, () => {

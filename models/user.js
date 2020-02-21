@@ -8,7 +8,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true, required: [true, 'Email is required'] },
     password: { type: String, required: [true, 'Password is required'] },
     img: { type: String },
-    Role: { type: String, required: true, default: 'USER_ROLE' },
+    role: { type: String, required: true, default: 'USER_ROLE' },
 
 });
 
