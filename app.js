@@ -1,6 +1,7 @@
 // requires
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
 
 // initializations
 const app = express();
@@ -8,6 +9,9 @@ const app = express();
 // importing routes
 const appRoutes = require('./routes/app');
 const userRoutes = require('./routes/user');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // database connection
 const uri = "mongodb://localhost:27017/hospitalDB";
