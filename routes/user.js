@@ -60,25 +60,23 @@ router.post("/", (req, res, next) => {
 // PUT
 // ================================
 router.put("/:id", (req, res, next) => {
-  
   const id = req.params.id;
   let body = req.body;
 
   // Finding users for provided ID
-  User.findById( id, 'name email role img', (err, user) => {
-
+  User.findById(id, "name email role img", (err, user) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        message: 'Error finding user',
-        error: err,
+        message: "Error finding user",
+        error: err
       });
     }
 
     if (!user) {
       return res.status(400).json({
         ok: false,
-        message: 'No user found for provided ID',
+        message: "No user found for provided ID",
         id: id
       });
     }
@@ -90,23 +88,43 @@ router.put("/:id", (req, res, next) => {
 
     // Saving changes
     user.save((err, userSaved) => {
-      
       if (err) {
         return res.status(400).json({
           ok: false,
-          message: 'Error updating user',
-          error: err,
+          message: "Error updating user",
+          error: err
         });
       }
 
       res.status(200).json({
         ok: true,
         user: userSaved
-      })
-
+      });
     });
-
   });
+});
+
+// ================================
+// DELETE
+// ================================
+router.delete("/:id", (req, res, next) => {
+  const id = req.params.id;
+
+  User.deleteOne({ _id: id })
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        ok: true,
+        message: "User deleted successfully"
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        ok: false,
+        message: `Error deleting user with provided ID: ${id}`,
+        error: err
+      });
+    });
 });
 
 module.exports = router;
