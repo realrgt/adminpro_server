@@ -10,6 +10,7 @@ const app = express();
 const appRoutes = require('./routes/app');
 const userRoutes = require('./routes/user');
 const loginRoutes = require('./routes/login');
+const hospitalRoutes = require('./routes/hospital');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -28,6 +29,7 @@ mongoose.connection.openUri(
 // routes
 app.use("/users", userRoutes);
 app.use('/login', loginRoutes);
+app.use('/hospitals', hospitalRoutes);
 app.use("/", appRoutes);
 
 // executes queries
