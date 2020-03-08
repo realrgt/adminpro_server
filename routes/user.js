@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
+const mdAuth = require('../middlewares/auth');
 
 // ================================
 // GET
@@ -59,7 +60,8 @@ router.post("/", (req, res, next) => {
 // ================================
 // PUT
 // ================================
-router.put("/:id", (req, res, next) => {
+router.put("/:id", mdAuth.verifyToken, (req, res, next) => {
+
   const id = req.params.id;
   let body = req.body;
 
@@ -107,7 +109,7 @@ router.put("/:id", (req, res, next) => {
 // ================================
 // DELETE
 // ================================
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", mdAuth.verifyToken, (req, res, next) => {
   const id = req.params.id;
 
   User.deleteOne({ _id: id })
