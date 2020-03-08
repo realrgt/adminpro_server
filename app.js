@@ -9,6 +9,7 @@ const app = express();
 // importing routes
 const appRoutes = require('./routes/app');
 const userRoutes = require('./routes/user');
+const loginRoutes = require('./routes/login');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,7 +18,7 @@ app.use(bodyParser.json());
 const uri = "mongodb://localhost:27017/hospitalDB";
 mongoose.connection.openUri(
   uri,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   (err, res) => {
     if (err) throw err;
     console.log("Database: \x1b[32m%s\x1b[0m", "online");
@@ -26,6 +27,7 @@ mongoose.connection.openUri(
 
 // routes
 app.use("/users", userRoutes);
+app.use('/login', loginRoutes);
 app.use("/", appRoutes);
 
 // executes queries
