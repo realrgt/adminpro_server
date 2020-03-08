@@ -26,4 +26,32 @@ router.get("/", (req, res, next) => {
     });
 });
 
+// ================================
+// POST
+// ================================
+router.post("/", (req, res, next) => {
+  const hospital = new Hospital({
+    name: req.body.name,
+    user: req.body.user,
+    img: req.body.img,
+  });
+
+  hospital
+    .save()
+    .then(result => {
+      res.status(201).json({
+        ok: true,
+        message: "created successfully",
+        hospital: result
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        ok: false,
+        message: "Error creating hospital",
+        error: err
+      });
+    });
+});
+
 module.exports = router;
