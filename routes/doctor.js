@@ -56,6 +56,56 @@ router.post("/", (req, res, next) => {
 });
 
 // ================================
+// PUT
+// ================================
+router.put("/:id", (req, res, next) => {
+
+    const id = req.params.id;
+    let body = req.body;
+  
+    // Finding users for provided ID
+    Doctor.findById(id, "name user img hospital", (err, doctor) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          message: "Error finding doctor",
+          error: err
+        });
+      }
+  
+      if (!doctor) {
+        return res.status(400).json({
+          ok: false,
+          message: "No doctor found for provided ID",
+          id: id
+        });
+      }
+  
+      // Updating user data
+      doctor.name = body.name;
+      // hospital.user = body.user;
+      // hospital.img = body.img;
+      // hospital.hospital = body.hospital;
+  
+      // Saving changes
+      doctor.save((err, doctorSaved) => {
+        if (err) {
+          return res.status(400).json({
+            ok: false,
+            message: "Error updating doctors data",
+            error: err
+          });
+        }
+  
+        res.status(200).json({
+          ok: true,
+          doctor: doctorSaved
+        });
+      });
+    });
+  });
+
+// ================================
 // DELETE
 // ================================
 router.delete("/:id", (req, res, next) => {
