@@ -1,7 +1,7 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-var doctorSchema = new Schema({
+const doctorSchema = new Schema({
   name: { type: String, required: [true, "Name is required"] },
   img: { type: String, required: false },
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
