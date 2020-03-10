@@ -55,6 +55,27 @@ router.post("/", (req, res, next) => {
     });
 });
 
+// ================================
+// DELETE
+// ================================
+router.delete("/:id", (req, res, next) => {
+  const id = req.params.id;
 
+  Doctor.deleteOne({ _id: id })
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        ok: true,
+        message: "Doctor deleted successfully"
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        ok: false,
+        message: `Error deleting the doctor with provided ID: ${id}`,
+        error: err
+      });
+    });
+});
 
 module.exports = router;
