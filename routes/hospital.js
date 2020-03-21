@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Hospital = require("../models/hospital");
-const mdAuth = require('../middlewares/auth');
+const mdAuth = require("../middlewares/auth");
 
 // ================================
 // GET
@@ -29,11 +29,10 @@ router.get("/", (req, res, next) => {
 // ================================
 // POST
 // ================================
-router.post("/", (req, res, next) => {
+router.post("/", mdAuth.verifyToken, (req, res, next) => {
   const hospital = new Hospital({
     name: req.body.name,
-    user: req.body.user,
-    img: req.body.img,
+    user: req.user._id
   });
 
   hospital
@@ -57,8 +56,7 @@ router.post("/", (req, res, next) => {
 // ================================
 // PUT
 // ================================
-router.put("/:id", (req, res, next) => {
-
+router.put("/:id", mdAuth.verifyToken, (req, res, next) => {
   const id = req.params.id;
   let body = req.body;
 
@@ -80,10 +78,9 @@ router.put("/:id", (req, res, next) => {
       });
     }
 
-    // Updating user data
+    // Updating hospital data
     hospital.name = body.name;
-    // hospital.user = body.user;
-    // hospital.img = body.img;
+    hospital.user = req.user._id;
 
     // Saving changes
     hospital.save((err, hospitalSaved) => {
@@ -106,24 +103,24 @@ router.put("/:id", (req, res, next) => {
 // ================================
 // DELETE
 // ================================
-router.delete("/:id", (req, res, next) => {
-    const id = req.params.id;
-  
-    Hospital.deleteOne({ _id: id })
-      .exec()
-      .then(() => {
-        res.status(200).json({
-          ok: true,
-          message: "Hospital deleted successfully"
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          ok: false,
-          message: `Error deleting hospital with provided ID: ${id}`,
-          error: err
-        });
+router.delete("/:id", mdAuth.verifyToken, (req, res, next) => {
+  const id = req.params.id;
+
+  Hospital.deleteOne({ _id: id })
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        ok: true,
+        message: "Hospital deleted successfully"
       });
-  });
+    })
+    .catch(err => {
+      res.status(500).json({
+        ok: false,
+        message: `Error deleting hospital with provided ID: ${id}`,
+        error: err
+      });
+    });
+});
 
 module.exports = router;
