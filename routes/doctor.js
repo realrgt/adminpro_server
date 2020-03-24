@@ -29,12 +29,11 @@ router.get("/", (req, res, next) => {
 // ================================
 // POST
 // ================================
-router.post("/", (req, res, next) => {
+router.post("/", mdAuth.verifyToken, (req, res, next) => {
   const doctor = new Doctor({
     name: req.body.name,
-    user: req.body.user,
-    img: req.body.img,
-    hospital: req.body.hospital
+    user: req.user._id,
+    hospital: req.body.hospital   // hosts hospital ID
   });
 
   doctor
@@ -49,7 +48,7 @@ router.post("/", (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         ok: false,
-        message: "Error creating a doctor",
+        message: "Error creating doctor",
         error: err
       });
     });
@@ -58,57 +57,56 @@ router.post("/", (req, res, next) => {
 // ================================
 // PUT
 // ================================
-router.put("/:id", (req, res, next) => {
+router.put("/:id", mdAuth.verifyToken, (req, res, next) => {
+  const id = req.params.id;
+  let body = req.body;
 
-    const id = req.params.id;
-    let body = req.body;
-  
-    // Finding users for provided ID
-    Doctor.findById(id, "name user img hospital", (err, doctor) => {
+  // Finding users for provided ID
+  Doctor.findById(id, "name user img hospital", (err, doctor) => {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        message: "Error finding doctor",
+        error: err
+      });
+    }
+
+    if (!doctor) {
+      return res.status(400).json({
+        ok: false,
+        message: "No doctor found for provided ID",
+        id: id
+      });
+    }
+
+    // Updating doctor data
+    doctor.name = body.name;
+    doctor.hospital = body.hospital;
+    doctor.user = req.user._id;
+
+    // Saving changes
+    doctor.save((err, doctorSaved) => {
       if (err) {
-        return res.status(500).json({
+        return res.status(400).json({
           ok: false,
-          message: "Error finding doctor",
+          message: "Error updating doctor",
           error: err
         });
       }
-  
-      if (!doctor) {
-        return res.status(400).json({
-          ok: false,
-          message: "No doctor found for provided ID",
-          id: id
-        });
-      }
-  
-      // Updating user data
-      doctor.name = body.name;
-      // hospital.user = body.user;
-      // hospital.img = body.img;
-      // hospital.hospital = body.hospital;
-  
-      // Saving changes
-      doctor.save((err, doctorSaved) => {
-        if (err) {
-          return res.status(400).json({
-            ok: false,
-            message: "Error updating doctors data",
-            error: err
-          });
-        }
-  
-        res.status(200).json({
-          ok: true,
-          doctor: doctorSaved
-        });
+
+      res.status(200).json({
+        ok: true,
+        doctor: doctorSaved
       });
+      
     });
   });
+});
 
 // ================================
 // DELETE
 // ================================
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", mdAuth.verifyToken, (req, res, next) => {
   const id = req.params.id;
 
   Doctor.deleteOne({ _id: id })
@@ -122,7 +120,7 @@ router.delete("/:id", (req, res, next) => {
     .catch(err => {
       res.status(500).json({
         ok: false,
-        message: `Error deleting the doctor with provided ID: ${id}`,
+        message: `Error deleting doctor with provided ID: ${id}`,
         error: err
       });
     });
