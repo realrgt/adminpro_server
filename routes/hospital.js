@@ -8,13 +8,21 @@ const mdAuth = require("../middlewares/auth");
 // GET
 // ================================
 router.get("/", (req, res, next) => {
+  
+  let fromIndex = req.query.fromIndex || 0;
+  fromIndex = Number(fromIndex);
+  console.log(`fromIndex: ${fromIndex}`);
+
   Hospital.find()
+    .skip(fromIndex)
+    .limit(5)
     .select("name img user")
     .populate('user', 'name email')
     .exec()
     .then(docs => {
       res.status(200).json({
         ok: true,
+        count: docs.length,
         hospitals: docs
       });
     })

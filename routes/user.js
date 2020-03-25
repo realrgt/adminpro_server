@@ -9,12 +9,20 @@ const mdAuth = require('../middlewares/auth');
 // GET
 // ================================
 router.get("/", (req, res, next) => {
+
+  let fromIndex = req.query.fromIndex || 0;
+  fromIndex = Number(fromIndex);
+  console.log(`fromIndex: ${fromIndex}`);
+
   User.find()
+    .skip(fromIndex)
+    .limit(5)
     .select("name email role img")
     .exec()
     .then(docs => {
       res.status(200).json({
         ok: true,
+        count: docs.length, 
         users: docs
       });
     })
@@ -28,14 +36,14 @@ router.get("/", (req, res, next) => {
 });
 
 // ================================
-// POST
+// POST - create new user {SIGNUP}
 // ================================
 router.post("/", (req, res, next) => {
   const user = new User({
     name: req.body.name,
     email: req.body.email,
     role: req.body.role,
-    img: req.body.img,
+    // img: req.body.img,
     password: bcrypt.hashSync(req.body.password, 10)
   });
 
