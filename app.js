@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user');
 const loginRoutes = require('./routes/login');
 const hospitalRoutes = require('./routes/hospital');
 const doctorRoutes = require('./routes/doctor');
+const searchRoutes = require('./routes/search');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,6 +33,8 @@ app.use("/users", userRoutes);
 app.use('/login', loginRoutes);
 app.use('/hospitals', hospitalRoutes);
 app.use('/doctors', doctorRoutes);
+app.use('/search', searchRoutes);
+
 app.use("/", appRoutes);
 
 // executes queries
