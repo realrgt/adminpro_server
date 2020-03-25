@@ -3,3 +3,8 @@
 
 # secret keys
 /nodemon.json
+
+# uploaded files
+/uploads/doctors/*
+/uploads/hospitals/*
+/uploads/users/*
