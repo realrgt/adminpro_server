@@ -10,6 +10,7 @@ const mdAuth = require("../middlewares/auth");
 router.get("/", (req, res, next) => {
   Hospital.find()
     .select("name img user")
+    .populate('user', 'name email')
     .exec()
     .then(docs => {
       res.status(200).json({
