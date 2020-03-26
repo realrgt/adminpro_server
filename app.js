@@ -14,6 +14,7 @@ const hospitalRoutes = require('./routes/hospital');
 const doctorRoutes = require('./routes/doctor');
 const searchRoutes = require('./routes/search');
 const uploadRoutes = require('./routes/upload');
+const imageRoutes = require('./routes/images');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -36,6 +37,7 @@ app.use('/hospitals', hospitalRoutes);
 app.use('/doctors', doctorRoutes);
 app.use('/search', searchRoutes);
 app.use('/uploads', uploadRoutes);
+app.use('/img', imageRoutes);
 
 app.use("/", appRoutes);
 
